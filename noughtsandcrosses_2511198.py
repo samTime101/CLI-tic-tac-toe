@@ -77,8 +77,7 @@ def get_player_move(board):
             col = (user_input-1)%3
             if board[row][col] == ' ':
                 return row,col
-            else:
-                print("Cell already occupied")
+            print("Cell already occupied")
         except ValueError as error :
             print(error)
             continue

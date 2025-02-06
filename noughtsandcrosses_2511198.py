@@ -81,45 +81,69 @@ def get_player_move(board):
         except ValueError as error :
             print(error)
             continue
+
+# Feb 6 , Added Min Max algo
+
+def minimax(board, depth, is_maximizing):
+    """
+    min max : ALGORITHM REFERENCE :
+    https://www.datacamp.com/tutorial/minimax-algorithm-for-ai-in-python  PSEUDOCODE
+    RECURSIVE ALGORITHM ,
+    RETURNS BEST SCORE AFTER TRYING WINNING MOVE
+    """
+    # COMPUTER WON
+    if check_for_win(board, 'O'):
+        return 10
+    if check_for_win(board, 'X'):
+        return -10
+    if check_for_draw(board):
+        return 0
+    if is_maximizing:
+        best_score = float('-inf')
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == ' ':
+                    board[i][j] = 'O'
+                    score = minimax(board, depth + 1, False)
+                    board[i][j] = ' '
+                    # for first 0 and greater than 0
+                    best_score = max(score, best_score)
+        return best_score
+    else:
+        best_score = float('inf')
+        for i in range(3):
+            for j in range(3):
+                if board[i][j] == ' ':
+                    board[i][j] = 'X'
+                    score = minimax(board, depth + 1, True)
+                    board[i][j] = ' '
+                    # just less than inf
+                    best_score = min(score, best_score)
+        return best_score
+
 def choose_computer_move(board):
-    '''
-    function:choose_computer parameter:board returns available row and col
-    LOGIC: I have implemented a single combination threat block and win logic but
-    doesnot accounts for 2 move combo as it was requiring min max function which required defining
-    more function which would have breaked the coursework law of only writing code
-    to predefined functions
-    '''
-    winning_conditions = [
-        [(0, 0), (0, 1), (0, 2)],
-        [(1, 0), (1, 1), (1, 2)],
-        [(2, 0), (2, 1), (2, 2)],
-        [(0, 0), (1, 0), (2, 0)],
-        [(0, 1), (1, 1), (2, 1)],
-        [(0, 2), (1, 2), (2, 2)],
-        [(0, 0), (1, 1), (2, 2)],
-        [(0, 2), (1, 1), (2, 0)]
-    ]
-    for condition in winning_conditions:
-        cells = [board[row][col] for row, col in condition]
-        if cells.count('O') == 2 and cells.count(' ') == 1 :
-            empty_cell_index = cells.index(' ')
-            row, col = condition[empty_cell_index]
-            return row, col
+    """
+    Algorithm : best score is set to lowest value
+    Calls minmax function and receives score
+    if score from func is greater than the lowest value ,
+    then it points to i, j and makes that move
+    """
+    best_score = float('-inf')
+    best_move = None
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'O'
+                score = minimax(board, 0, False)
+                board[i][j] = ' '
+                if score > best_score:
+                    best_score = score
+                    best_move = (i, j)
+    if best_move is None:
+        raise ValueError("No valid moves available")
+    return best_move
 
-    for condition in winning_conditions:
-        cells = [board[row][col] for row, col in condition]
-        if cells.count('X') == 2 and cells.count(' ') == 1 :
-            empty_cell_index = cells.index(' ')
-            row, col = condition[empty_cell_index]
-            return row, col
 
-    if board[1][1] == ' ':
-        return 1, 1
-
-    for row in range(3):
-        for col in range(3):
-            if board[row][col] == ' ':
-                return row, col
 
 def check_for_win(board, mark):
 

@@ -109,17 +109,16 @@ def minimax(board, depth, is_maximizing):
                     # for first 0 and greater than 0
                     best_score = max(score, best_score)
         return best_score
-    else:
-        best_score = float('inf')
-        for i in range(3):
-            for j in range(3):
-                if board[i][j] == ' ':
-                    board[i][j] = 'X'
-                    score = minimax(board, depth + 1, True)
-                    board[i][j] = ' '
-                    # just less than inf
-                    best_score = min(score, best_score)
-        return best_score
+    best_score = float('inf')
+    for i in range(3):
+        for j in range(3):
+            if board[i][j] == ' ':
+                board[i][j] = 'X'
+                score = minimax(board, depth + 1, True)
+                board[i][j] = ' '
+                # just less than inf
+                best_score = min(score, best_score)
+    return best_score
 
 def choose_computer_move(board):
     """
@@ -216,9 +215,8 @@ def play_game(board):
             if cur_player == "X":
                 print("Player X Won")
                 return 1
-            else:
-                print("Computer Won")
-                return -1
+            print("Computer Won")
+            return -1
         if check_for_draw(board):
             print("Draw No one Won ")
             return 0

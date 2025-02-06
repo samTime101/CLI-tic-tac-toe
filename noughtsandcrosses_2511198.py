@@ -208,7 +208,7 @@ def play_game(board):
                 board[row][col] = "O"
             except ValueError as error:
                 print(error)
-                return
+                return -100
         draw_board(board)
 
         if check_for_win(board,cur_player):
@@ -266,7 +266,7 @@ def save_score(score):
     leaders[name] = score
     with open('leaderboard.txt', 'w',encoding='utf-8') as file:
         json.dump(leaders, file)
-    return
+    # return
 
 
 def display_leaderboard(leaders):
